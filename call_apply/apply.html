@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        Function.prototype.myApply = function (context) {
+            // var context = Object(context) || window;
+            var context = context || window;
+            context.fn = this;
+            var arr = arguments[1];
+            var result;
+            if (!arr) {
+                result = context.fn();
+            }
+            else {
+                var args = [];
+                for (var i = 0, len = arr.length; i < len; i++) {
+                    args.push('arr[' + i + ']');
+                }
+                // result = eval('context.fn(' + args + ')')
+                result = context.fn(...args);
+            }
+            delete context.fn
+            return result;
+        }
+        var value = 2;
+        var obj = {
+            value: 1
+        }
+        function bar(name, age) {
+            console.log(this.value);
+            return {
+                value: this.value,
+                name: name,
+                age: age
+            }
+        }
+        bar.myApply(null);
+        console.log(bar.myApply(obj, ['kevin', 18]));
+    </script>
+</body>
+
+</html>
